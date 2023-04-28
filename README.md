@@ -6,10 +6,18 @@ Actually this php library can only handle one xml file passed to stdin.
 
 ## How To
 ### Docker
-If you want to use this little library as docker image so perform `docker build -t xpathgenerator .`.
 
-Now try to pass a xml file to the script using `cat your/file.xml | | docker run --rm -i xpathgenerator php main.php -
-`  
+If you want to use this little library as docker image so perfor
+
+```shell
+docker build -t xpathgenerator .
+```
+
+Now try to pass a xml file to the script using
+
+```shell
+cat your/file.xml | docker run --rm -i xpathgenerator
+``` 
 
 ### Local
 
