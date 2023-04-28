@@ -1,0 +1,23 @@
+{
+    "name": "vahdettinbalum/xpathgenerator",
+    "description": "This PHP-Project will enforce you to generate a json file by passing a xml file. It will return xpaths with the values in json format.",
+    "type": "library",
+    "require": {
+        "ext-simplexml": "*",
+        "ext-json": "*",
+        "ext-dom": "*"
+    },
+    "license": "GNU",
+    "autoload": {
+        "psr-4": {
+            "Xpathgenerator\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Vahdettin Balum",
+            "email": "mrbalum@dexpro.de"
+        }
+    ],
+    "minimum-stability": "dev"
+}
