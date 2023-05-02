@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Xpathgenerator\Service;
 
 use DOMDocument;
-use DOMElement;
 use DOMXPath;
 use Exception;
 
@@ -14,10 +14,10 @@ class XPathExtractionService
 {
     /**
      * @param string $xmlData
-     * @return string
+     * @return array
      * @throws Exception
      */
-    public function getXPaths(string $xmlData): string
+    public function getXPaths(string $xmlData): array
     {
         // Load the XML file
         $dom = new DOMDocument();
@@ -43,31 +43,22 @@ class XPathExtractionService
         }
 
         // Group related elements in a tree-like structure
-        $groupedResults = $this->groupResults($results);
-
-        // Convert the results array to JSON without escape characters
-        $json = json_encode($groupedResults, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_INVALID_UTF8_IGNORE);
-
-        // Clean up the resulting JSON string
-        /*$json = preg_replace('/\s+/u', '', $json);*/
-
-        // Output the JSON
-        return $json;
+        return $this->groupResults($results);
     }
 
 
     /**
      * Generates an XPath expression for the given DOM element
      *
-     * @param DOMElement $element The DOM element to generate the XPath for
+     * @param \DOMNode $element The DOM element to generate the XPath for
      * @return string The generated XPath expression
      */
-    private function getXpath(DOMElement $element): string
+    private function getXpath(\DOMNode $element): string
     {
         $xpath = '';
 
         // Generate the XPath
-        for (; $element; $element = $element->parentNode) {
+        for (; $element && $element->nodeType == XML_ELEMENT_NODE; $element = $element->parentNode) {
             $position = 1;
             $previous_sibling = $element->previousSibling;
             while ($previous_sibling) {

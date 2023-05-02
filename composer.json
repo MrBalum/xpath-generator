@@ -5,7 +5,8 @@
     "require": {
         "ext-simplexml": "*",
         "ext-json": "*",
-        "ext-dom": "*"
+        "ext-dom": "*",
+        "vimeo/psalm": "5.9.0"
     },
     "license": "GNU",
     "autoload": {
