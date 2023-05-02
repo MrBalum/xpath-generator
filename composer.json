@@ -6,9 +6,9 @@
         "ext-simplexml": "*",
         "ext-json": "*",
         "ext-dom": "*",
-        "vimeo/psalm": "5.9.0"
+        "php": ">=7.4"
     },
-    "license": "GNU",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Xpathgenerator\\": "src/"
@@ -19,6 +19,5 @@
             "name": "Vahdettin Balum",
             "email": "mrbalum@dexpro.de"
         }
-    ],
-    "minimum-stability": "dev"
+    ]
 }
