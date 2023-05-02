@@ -67,7 +67,7 @@ class XPathExtractionService
         $xpath = '';
 
         // Generate the XPath
-        for (; $element; $element = $element->parentNode) {
+        for (; $element && $element->nodeType == XML_ELEMENT_NODE; $element = $element->parentNode) {
             $position = 1;
             $previous_sibling = $element->previousSibling;
             while ($previous_sibling) {
