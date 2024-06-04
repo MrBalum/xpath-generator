@@ -27,10 +27,21 @@ class XPathExtractionService
         $elements = $xpath->query('//*[not(*)]');
 
         $results = [];
+        /** @var \DOMNode $element */
         foreach ($elements as $element) {
+            $attributes = [];
+            $xpath = $this->getXpath($element);
+            foreach ($element->attributes as $attr) {
+                $attributes[] = [
+                    "name"=> $attr->name,
+                    "value"=> $attr->nodeValue,
+                    "xpath" => $xpath."/@".$attr->name
+                ];
+            }
             $results[] = [
-                'xpath' => $this->getXpath($element),
+                'xpath' => $xpath,
                 'text' => $element->textContent,
+                'attributes' => $attributes
             ];
         }
 
@@ -108,6 +119,7 @@ class XPathExtractionService
             // Add the text content as the last element in the tree structure
             $currentGroup['value'] = $result['text'];
             $currentGroup['xpath'] = $result['xpath'];
+            $currentGroup['attributes'] = $result['attributes'];
         }
         return $groupedResults;
     }
