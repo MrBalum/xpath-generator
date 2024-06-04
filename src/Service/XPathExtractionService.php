@@ -12,29 +12,21 @@ use Exception;
  */
 class XPathExtractionService
 {
-    /**
-     * @param string $xmlData
-     * @return array
-     * @throws Exception
-     */
     public function getXPaths(string $xmlData): array
     {
-        // Load the XML file
         $dom = new DOMDocument();
         if (!$dom->loadXML($xmlData)) {
             throw new Exception('Cannot load xml, maybe it is broken');
-        };
+        }
 
-        // Initialize the array for the results
-        $results = [];
-
-        // Initialize the DOMXPath object
+        // Extract namespaces
         $xpath = new DOMXPath($dom);
+        $namespaces = $this->extractNamespaces($xpath);
 
         // Find all elements without child nodes
         $elements = $xpath->query('//*[not(*)]');
 
-        // Iterate through the found elements and add their XPath expressions and text content to the results array
+        $results = [];
         foreach ($elements as $element) {
             $results[] = [
                 'xpath' => $this->getXpath($element),
@@ -43,7 +35,10 @@ class XPathExtractionService
         }
 
         // Group related elements in a tree-like structure
-        return $this->groupResults($results);
+        $groupedResults = $this->groupResults($results);
+        $groupedResults['@namespaces'] = $namespaces; // Add namespaces to the root
+
+        return $groupedResults;
     }
 
 
@@ -115,6 +110,18 @@ class XPathExtractionService
             $currentGroup['xpath'] = $result['xpath'];
         }
         return $groupedResults;
+    }
+
+    private function extractNamespaces(DOMXPath $xpath): array
+    {
+        $namespaces = [];
+        foreach ($xpath->query('namespace::*') as $nsNode) {
+            if ($nsNode->localName === 'xml') {
+                continue; // Skip the 'xml' namespace
+            }
+            $namespaces[$nsNode->localName] = $nsNode->nodeValue;
+        }
+        return $namespaces;
     }
 }
 
