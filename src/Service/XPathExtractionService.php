@@ -54,35 +54,26 @@ class XPathExtractionService
 
 
     /**
-     * Generates an XPath expression for the given DOM element
-     *
-     * @param \DOMNode $element The DOM element to generate the XPath for
-     * @return string The generated XPath expression
+     * @param \DOMNode $element
+     * @return string
      */
     private function getXpath(\DOMNode $element): string
     {
         $xpath = '';
-
-        // Generate the XPath
         for (; $element && $element->nodeType == XML_ELEMENT_NODE; $element = $element->parentNode) {
             $position = 1;
-            $previous_sibling = $element->previousSibling;
-            while ($previous_sibling) {
-                if ($previous_sibling->nodeName == $element->nodeName) {
-                    $position += 1;
+            foreach ($element->parentNode->childNodes as $sibling) {
+                if ($sibling === $element) {
+                    break;
                 }
-                $previous_sibling = $previous_sibling->previousSibling;
+                if ($sibling->nodeName == $element->nodeName) {
+                    $position++;
+                }
             }
 
             $name = $element->nodeName;
-            if ($position > 1) {
-                $name .= "[$position]";
-            }
-
-            $xpath = "/$name" . $xpath;
+            $xpath = '/' . $name . ($position >= 1 ? "[$position]" : '') . $xpath;
         }
-
-        // Return the XPath
         return $xpath;
     }
 
@@ -107,6 +98,7 @@ class XPathExtractionService
 
             // Traverse all the components of the XPath expression
             foreach ($pathParts as $part) {
+                $part = preg_replace("/(\[)1(])/","",$part);
                 // If the component does not exist as a key in the current group, add it
                 if (!isset($currentGroup[$part])) {
                     $currentGroup[$part] = [];
