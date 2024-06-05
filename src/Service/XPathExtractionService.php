@@ -38,7 +38,7 @@ class XPathExtractionService
         $namespaces = $this->extractNamespaces($xpath);
 
         // Find all elements without child nodes
-        $elements = $xpath->query('//*[not(*)]');
+        $elements = $xpath->query("//*");
 
         $results = [];
         /** @var \DOMNode $element */
