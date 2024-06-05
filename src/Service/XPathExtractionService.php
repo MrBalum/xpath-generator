@@ -16,6 +16,8 @@ use Exception;
  */
 class XPathExtractionService
 {
+
+    private int $stringMaxLength = 100;
     /**
      * Extracts XPaths, text content, and attributes from XML data.
      *
@@ -54,7 +56,7 @@ class XPathExtractionService
             }
             $results[] = [
                 'xpath' => $xpath,
-                'text' => $element->textContent,
+                'text' => $this->trimString($element->nodeValue),
                 'attributes' => $attributes
             ];
         }
@@ -64,6 +66,28 @@ class XPathExtractionService
         $groupedResults['@namespaces'] = $namespaces; // Add namespaces to the root
 
         return $groupedResults;
+    }
+
+    /**
+     * Trims a string to a maximum length.
+     */
+    private function trimString(string &$string): string
+    {
+        self::removeNewlines($string);
+        $string = strlen($string) > $this->stringMaxLength
+            ? substr($string, 0, $this->stringMaxLength) . '...'
+            : $string;
+
+        return $string;
+    }
+
+    private static function removeNewlines(&$value): void
+    {
+        if (is_string($value)) {
+            $value = trim(preg_replace('/\s+/', ' ', $value)); // Entferne \n und überflüssige Leerzeichen
+        } elseif (is_array($value)) {
+            array_walk_recursive($value, 'removeNewlines'); // Rekursion für verschachtelte Arrays
+        }
     }
 
 
@@ -151,6 +175,23 @@ class XPathExtractionService
             $namespaces[$nsNode->localName] = $nsNode->nodeValue;
         }
         return $namespaces;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStringMaxLength(): int
+    {
+        return $this->stringMaxLength;
+    }
+
+    /**
+     * @param int $stringMaxLength
+     * @return void
+     */
+    public function setStringMaxLength(int $stringMaxLength): void
+    {
+        $this->stringMaxLength = $stringMaxLength;
     }
 }
 
