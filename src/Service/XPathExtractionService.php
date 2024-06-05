@@ -8,10 +8,24 @@ use DOMXPath;
 use Exception;
 
 /**
- * This cla
+ * XPathExtractionService: Extracts XPaths and text content from XML data.
+ *
+ * Provides methods for transforming XML into a structured representation
+ * of its elements, attributes, and corresponding XPaths. This is particularly
+ * useful for tools that interact with XML data programmatically.
  */
 class XPathExtractionService
 {
+    /**
+     * Extracts XPaths, text content, and attributes from XML data.
+     *
+     * Parses the XML, identifies elements without children, and creates a nested structure
+     * grouping related elements. Additionally, it extracts namespaces from the XML.
+     *
+     * @param string $xmlData The XML data to process
+     * @return array A nested array representing the XML structure with XPaths, text, and attributes.
+     * @throws Exception If the XML data is invalid.
+     */
     public function getXPaths(string $xmlData): array
     {
         $dom = new DOMDocument();
@@ -54,8 +68,10 @@ class XPathExtractionService
 
 
     /**
-     * @param \DOMNode $element
-     * @return string
+     * Generates the XPath expression for a given DOM element.
+     *
+     * @param \DOMNode $element The DOM element for which to generate the XPath.
+     * @return string The XPath expression for the element.
      */
     private function getXpath(\DOMNode $element): string
     {
@@ -79,10 +95,13 @@ class XPathExtractionService
 
 
     /**
-     * Groups related results into a tree-like structure
+     * Groups extracted results into a nested structure based on their XPaths.
      *
-     * @param array $results
-     * @return array|mixed
+     * Transforms a flat array of XPaths, text, and attributes into a hierarchical
+     * representation that mirrors the structure of the XML document.
+     *
+     * @param array $results The flat array of extracted results.
+     * @return array The nested array representing the grouped results.
      */
     public function groupResults(array $results): array
     {
@@ -116,6 +135,12 @@ class XPathExtractionService
         return $groupedResults;
     }
 
+    /**
+     * Extracts namespaces from the XML document.
+     *
+     * @param DOMXPath $xpath The DOMXPath object used to query the XML.
+     * @return array An array of namespaces, where keys are prefixes and values are URIs.
+     */
     private function extractNamespaces(DOMXPath $xpath): array
     {
         $namespaces = [];
