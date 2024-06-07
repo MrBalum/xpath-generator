@@ -7,6 +7,9 @@
         "ext-dom": "*",
         "php": ">=7.4"
     },
+    "scripts": {
+        "lint": "vendor/bin/phpstan analyze"
+    },
     "license": "GPL-3.0-only",
     "autoload": {
         "psr-4": {
